@@ -57,7 +57,10 @@ class Sponsor(models.Model):
     pay_type = models.CharField(max_length=30,choices=CHOICES2,default=None,blank=True,null=True)
 
     def clean(self):
-        print("clean ishladi")
+        if self.pk:
+            sponsor = Sponsor.objects.get(pk=self.pk)
+            if (sponsor.status == "Tasdiqlangan" or sponsor.status == "Moderatsiyada") and self.status == "Yangi":
+                raise valid_er("Statusni dastlabki holatga qaytarib bo`lmaydi!")
         if self.is_company and self.company_name is None:
             raise valid_er("Korxona nomi kiritilmadi")
         if self.is_company is False and self.company_name:
@@ -96,7 +99,6 @@ class Student(models.Model):
     sponsor = models.ManyToManyField(Sponsor,through='StudentSponsor',related_name='student')
 
     def clean(self):
-        print("clean ishladi")
         student_all_get = self.studentsponsor_set.all().aggregate(Sum('amount')).get('amount__sum')
         if student_all_get is None:
             student_all_get = 0
@@ -120,7 +122,6 @@ class StudentSponsor(models.Model):
 
     def clean(self):
         if self.pk:
-            print("update qilinyapti")
             object = StudentSponsor.objects.get(pk=self.pk)
             if object.sponsor != self.sponsor:
                 raise valid_er("Homiyni o`zgartirish mumkin emas!")
@@ -148,7 +149,6 @@ class StudentSponsor(models.Model):
             if errorr != "":
                 raise valid_er(errorr)
         else:
-            print("yaratilyapti")
             student_all_get = self.student.studentsponsor_set.all().aggregate(Sum('amount')).get('amount__sum')
             sponsor_all_give = self.sponsor.studentsponsor_set.all().aggregate(Sum('amount')).get('amount__sum')
             new_amount = self.amount

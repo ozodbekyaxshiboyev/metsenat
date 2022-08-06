@@ -48,10 +48,6 @@ class OtmViewSet(ModelViewSet):
 
 
 
-    def get_queryset(self):
-        return Sponsor.objects.all()
-
-
 class StudentListCreateApiView(ListCreateAPIView):   #todo OKEY
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
@@ -199,8 +195,8 @@ class SponsorDetailApiView(RetrieveUpdateDestroyAPIView):
         sponsor_all_give = sponsor.studentsponsor_set.all().aggregate(Sum('amount')).get('amount__sum')
         if sponsor_all_give is None:
             sponsor_all_give = 0
-        if sponsor_all_give > 0:
-            raise ValidationError("Homiylik mablag`i ajratilgan homiyni uchirib bo`lmaydi!")
+        if sponsor_all_give > 0 or sponsor.status == "Tasdiqlangan":
+            raise ValidationError("Homiylik mablag`i ajratilgan yoki Tasdiqlangan homiyni uchirib bo`lmaydi!")
         return super().delete(request,*args, **kwargs)
 
 
