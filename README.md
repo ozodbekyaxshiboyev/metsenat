@@ -1,7 +1,7 @@
 # About Metsenat project
 An open source student support platform and public forum for questions and discussions, built for developers. <br>
 Live website - https://club.metsenat.uz <hr><br>
-<img src="./staticfiles/img.png">
+<img src="./static/img.png">
 
 
 # Installation
