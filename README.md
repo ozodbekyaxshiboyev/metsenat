@@ -22,4 +22,4 @@ Live website - https://club.metsenat.uz <hr><br>
 
 # Completed with
 * Django 
-* Database Design and Models with qslite3
+* Database Design and Models with Sqlite3
